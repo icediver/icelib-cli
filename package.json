@@ -1,0 +1,39 @@
+{
+  "name": "icelib",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "icelib": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "node scripts/watch.js",
+    "build": "run-s build:* install:global",
+    "build:tsc": "tsc",
+    "build:components": "node scripts/copy-components.js",
+    "install:global": "npm install -g",
+    "copy:components": "node scripts/copy-components.js"
+  },
+  "dependencies": {
+    "@types/dotenv": "^6.1.1",
+    "axios": "^1.9.0",
+    "chalk": "^5.3.0",
+    "cli-progress": "^3.12.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.5.0",
+    "execa": "^8.0.1",
+    "figlet": "^1.7.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.12",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/figlet": "^1.7.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.8",
+    "@types/node": "^20.11.19",
+    "nodemon": "^3.1.10",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.3.3"
+  }
+}
