@@ -11,31 +11,41 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_PAT }}
-          fetch-depth: 0  # Полная история для работы с тегами
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: Delete existing tag if needed
+      - name: Get current version
+        id: version
         run: |
-          git tag -d v$(node -p "require('./package.json').version") || true
-          git push --delete origin v$(node -p "require('./package.json').version") || true
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Bump version
+      - name: Bump version safely
         run: |
-          npm version patch --no-git-tag-version  # Обновляем версию без создания тега
-          VERSION=$(node -p "require('./package.json').version")
+          # Увеличиваем версию без создания тега
+          npm version patch --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          
+          # Проверяем существует ли тег
+          if git rev-parse "v$NEW_VERSION" >/dev/null 2>&1; then
+            echo "::error::Tag v$NEW_VERSION already exists, aborting"
+            exit 1
+          fi
+          
+          # Создаем коммит и тег
           git add package.json
-          git commit -m "Bump version to $VERSION"
-          git tag -a v$VERSION -m "Version $VERSION"
+          git commit -m "Bump version to $NEW_VERSION"
+          git tag -a "v$NEW_VERSION" -m "Version $NEW_VERSION"
 
-      - name: Push changes and tags
+      - name: Push changes
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
           git push origin HEAD:main
-          git push origin --tags --force
+          git push origin "v$(node -p "require('./package.json').version")"
 
       - name: Publish to npm
         run: npm publish
