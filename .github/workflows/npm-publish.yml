@@ -11,34 +11,38 @@ jobs:
     - uses: actions/checkout@v4
       with:
         token: ${{ secrets.GH_PAT }}
-        fetch-depth: 0  # Important for tag operations
+        fetch-depth: 0  # Полная история коммитов
 
-    - name: Configure Git
+    - name: Настраиваем Git
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         
-        # Fetch all tags from remote
+        # Получаем все теги с удаленного репозитория
         git fetch --tags --force
 
-    - name: Bump version
+    - name: Удаляем конфликтующий тег (если существует)
       run: |
-        # Check if working tree is clean
-        git status
-        
-        # Get current version from package.json
-        CURRENT_VERSION=$(node -p "require('./package.json').version")
-        echo "Current version: $CURRENT_VERSION"
-        
-        # Run npm version patch with --force flag if needed
-        npm version patch --force
-        
-        # Show new version
-        NEW_VERSION=$(node -p "require('./package.json').version")
-        echo "New version: $NEW_VERSION"
+        # Удаляем тег локально
+        git tag -d v1.0.37 || true
+        # Удаляем тег на удаленном репозитории (если существует)
+        git push --delete origin v1.0.37 || true
 
-    - name: Push changes and tags
+    - name: Обновляем версию
+      run: |
+        # Узнаем текущую версию
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "Текущая версия: $CURRENT_VERSION"
+        
+        # Создаем новую версию
+        npm version patch
+        
+        # Узнаем новую версию
+        NEW_VERSION=$(node -p "require('./package.json').version")
+        echo "Новая версия: $NEW_VERSION"
+
+    - name: Пушим изменения и теги
       run: |
         git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
         git push origin HEAD:main
-        git push --tags --force
+        git push --tags
