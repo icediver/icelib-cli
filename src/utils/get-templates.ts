@@ -2,6 +2,7 @@ import chalk from "chalk";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import { getPath } from "./dirname.helper.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -12,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 export async function getAvailableComponents(): Promise<string[]> {
   try {
-    const templatesPath = path.join(__dirname, `../templates/components`);
+    const templatesPath = getPath();
     const files = await fs.readdir(templatesPath);
 
     return files

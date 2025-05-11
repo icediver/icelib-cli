@@ -2,14 +2,9 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import fs from "fs-extra";
 import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import ora from "ora";
 import { createComponentFile } from "../utils/file.helper.js";
-
-// Поддержка __dirname в ES-модулях
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { getPath } from "../utils/dirname.helper.js";
 
 export async function addCommand(componentName: string) {
   const spinner = ora(`Adding ${componentName}...`).start();
@@ -24,15 +19,8 @@ export async function addCommand(componentName: string) {
 
     const config = await fs.readJSON(configPath);
 
-    // 2. Получить шаблон компонента
-    let componentCode: string;
-    const localTemplatePath = path.join(
-      __dirname,
-      "../templates/components",
-      `${componentName}.tsx`,
-    );
+    const localTemplatePath = getPath(componentName);
 
-    // Останавливаем спиннер перед вопросами
     spinner.stop();
 
     // 3. Спросить пользователя о настройках

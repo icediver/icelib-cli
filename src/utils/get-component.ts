@@ -1,14 +1,12 @@
 import chalk from "chalk";
 import fs from "fs-extra";
-import path, { dirname } from "path";
+import path from "path";
 import { Ora } from "ora";
 import axios from "axios";
-import { GITHUB_REPO_URL } from "../constants/url.conts.js";
-import { fileURLToPath } from "url";
+import { GITHUB_REPO_URL, TEMPLATE_DIR } from "../constants/url.conts.js";
+import { getDirname } from "./dirname.helper.js";
 
-// Поддержка __dirname в ES-модулях
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = getDirname();
 
 export async function getComponentTemplate(
   componentName: string,
@@ -16,13 +14,19 @@ export async function getComponentTemplate(
 ): Promise<string> {
   const localTemplatePath = path.join(
     __dirname,
-    "../templates/components",
+    TEMPLATE_DIR,
     `${componentName}.tsx`,
   );
 
   // Try local template first
   if (fs.existsSync(localTemplatePath)) {
-    return fs.readFile(localTemplatePath, "utf-8");
+    try {
+      return fs.readFile(localTemplatePath, "utf-8");
+    } catch (error) {
+      throw new Error(
+        `Failed to read local template for ${componentName}: ${error instanceof Error ? error.message : error}`,
+      );
+    }
   }
 
   // Fallback to remote template
