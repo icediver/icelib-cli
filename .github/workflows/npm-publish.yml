@@ -10,57 +10,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }}
-          fetch-depth: 0  # Полная история для работы с тегами
+          token: ${{ secrets.GH_PAT }}  # Используем PAT
+          fetch-depth: 0  # Полная история коммитов
 
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: Prepare environment
-        id: prep
-        run: |
-          # Получаем текущую версию
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          
-          # Вычисляем следующую версию (без создания тега)
-          NEXT_VERSION=$(npm version patch --dry-run | tail -n 1 | cut -d"'" -f2)
-          
-          # Проверяем существование тега
-          if git rev-parse "v$NEXT_VERSION" >/dev/null 2>&1; then
-            echo "::warning::Tag v$NEXT_VERSION exists, using existing version"
-            echo "new_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-            echo "should_publish=false" >> $GITHUB_OUTPUT
-          else
-            # Обновляем версию
-            npm version patch --no-git-tag-version --no-commit-hooks
-            echo "new_version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-            echo "should_publish=true" >> $GITHUB_OUTPUT
-          fi
+      - run: npm ci  # Устанавливаем зависимости
+      - run: npm version patch  # Обновляем версию (1.0.0 → 1.0.1)
 
-      - name: Commit and tag (if needed)
-        if: steps.prep.outputs.should_publish == 'true'
+      - name: Push changes and tags
         run: |
-          # Создаем коммит
-          git add package.json
-          git commit -m "Bump version to ${{ steps.prep.outputs.new_version }}"
-          
-          # Создаем тег
-          git tag -a "v${{ steps.prep.outputs.new_version }}" -m "Version ${{ steps.prep.outputs.new_version }}"
-          
-          # Пушим изменения
+          # Обновляем URL репозитория с токеном
           git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
+          
+          # Пушим изменения в package.json
           git push origin HEAD:main
-          git push origin "v${{ steps.prep.outputs.new_version }}"
+          
+          # Пушим теги
+          git push --tags
 
-      - name: Publish to npm (if needed)
-        if: steps.prep.outputs.should_publish == 'true'
+      - name: Publish to npm
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Skip publish (if version exists)
-        if: steps.prep.outputs.should_publish == 'false'
-        run: |
-          echo "Skipping publish - version ${{ steps.prep.outputs.new_version }} already exists"
