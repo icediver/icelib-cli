@@ -10,16 +10,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GH_PAT }}  # Используем PAT вместо GITHUB_TOKEN
-        fetch-depth: 0  # Полная история коммитов для работы с тегами
+        token: ${{ secrets.GH_PAT }}
+        fetch-depth: 0  # Important for tag operations
 
     - name: Configure Git
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
-    - run: npm version patch
+        
+        # Fetch all tags from remote
+        git fetch --tags --force
 
-    - name: Push tags
+    - name: Bump version
+      run: |
+        # Check if working tree is clean
+        git status
+        
+        # Get current version from package.json
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Run npm version patch with --force flag if needed
+        npm version patch --force
+        
+        # Show new version
+        NEW_VERSION=$(node -p "require('./package.json').version")
+        echo "New version: $NEW_VERSION"
+
+    - name: Push changes and tags
       run: |
         git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
-        git push --tags
+        git push origin HEAD:main
+        git push --tags --force
