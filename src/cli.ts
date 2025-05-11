@@ -17,17 +17,17 @@ program
   .description("A CLI for managing UI components like shadcn/ui");
 
 program
-  .command(chalk.yellow("init"))
-  .description(chalk.green("Initialize the configuration"))
+  .command("init")
+  .description("Initialize the configuration")
   .action(initCommand);
 
 program
-  .command(chalk.blue("add <component>"))
+  .command("add <component>")
   .description(chalk.green("  Add a component to your project"))
   .action(addCommand);
 
 program
-  .command(chalk.blue("all"))
+  .command("all")
   .description(chalk.green("Explore and add components"))
   .action(allCommand);
 
