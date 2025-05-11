@@ -1,7 +1,7 @@
 # Icelib CLI ❄️
 
 [![Node.js CI](https://github.com/icediver/icelib-cli/workflows/Node.js%20CI/badge.svg)](https://github.com/icediver/icelib-cli/actions)
-[![npm version](https://img.shields.io/npm/v/icelib-cli.svg)](https://www.npmjs.com/package/icelib)
+[![npm version](https://img.shields.io/npm/v/icelib.svg)](https://www.npmjs.com/package/icelib)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > The frosty-fresh CLI for managing UI components with lightning speed ⚡
