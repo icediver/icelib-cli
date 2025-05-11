@@ -10,27 +10,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }}  # Используем PAT
-          fetch-depth: 0  # Полная история коммитов
+          token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0  # Полная история для работы с тегами
 
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - run: npm ci  # Устанавливаем зависимости
-      - run: npm version patch  # Обновляем версию (1.0.0 → 1.0.1)
+      - name: Delete existing tag if needed
+        run: |
+          git tag -d v$(node -p "require('./package.json').version") || true
+          git push --delete origin v$(node -p "require('./package.json').version") || true
+
+      - name: Bump version
+        run: |
+          npm version patch --no-git-tag-version  # Обновляем версию без создания тега
+          VERSION=$(node -p "require('./package.json').version")
+          git add package.json
+          git commit -m "Bump version to $VERSION"
+          git tag -a v$VERSION -m "Version $VERSION"
 
       - name: Push changes and tags
         run: |
-          # Обновляем URL репозитория с токеном
           git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
-          
-          # Пушим изменения в package.json
           git push origin HEAD:main
-          
-          # Пушим теги
-          git push --tags
+          git push origin --tags --force
 
       - name: Publish to npm
         run: npm publish
