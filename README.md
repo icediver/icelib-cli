@@ -1,6 +1,6 @@
 # Icelib CLI ❄️
 
-[![Node.js CI](https://github.com/icediver/icelib-cli/workflows/Node.js%20CI/badge.svg)](https://github.com/icediver/icelib-cli/actions)
+[![Node.js CI](https://github.com/icediver/icelib-cli/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/icediver/icelib-cli/actions)
 [![npm version](https://img.shields.io/npm/v/icelib.svg)](https://www.npmjs.com/package/icelib)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
@@ -30,19 +30,22 @@ npx icelib-cli@latest init
 ```
 
 # Quick Start 🚀
+
 Initialize your project:
 
 ```bash
 icelib init
 ```
-## Add components:
 
+## Add components:
 
 ```bash
 # Single component
 icelib add Button
 ```
+
 ## Multiple components interactively
+
 ```
 icelib all
 ```
@@ -52,6 +55,7 @@ Start development:
 ```bash
 icelib watch
 ```
+
 Configuration ⚙️
 
 Create .icelibrc.json in your project root:
@@ -68,14 +72,14 @@ Create .icelibrc.json in your project root:
 
 # All Commands 📜
 
-Command	Description
+Command Description
 
-icelib init	Initialize project config
-icelib add <name>	Add new component
-icelib build	One-time build
-icelib watch	Continuous watch mode
-icelib plugins list	Show available plugins
-icelib plugins add	Install plugin
+icelib init Initialize project config
+icelib add <name> Add new component
+icelib build One-time build
+icelib watch Continuous watch mode
+icelib plugins list Show available plugins
+icelib plugins add Install plugin
 Development 👨‍💻
 Clone the repo:
 
@@ -83,18 +87,22 @@ Clone the repo:
 git clone https://github.com/icediver/icelib-cli.git
 cd icelib-cli
 ```
+
 Install dependencies:
 
 ```bash
 npm install
 ```
+
 Build and link:
 
 ```bash
 npm run build
 npm link
 ```
+
 # Contributing 🤝
+
 We welcome contributions! Please follow these steps:
 
 Fork the repository
@@ -116,20 +124,22 @@ MIT © Icediver
 📧 Support: icediver@live.ru
 🐞 Issues: https://github.com/icediver/icelib-cli/issues
 
-
 ### Key Improvements:
 
 1. **Visual Hierarchy**:
+
    - Consistent emoji headers
    - Proper badge alignment
    - Clear section separation
 
 2. **Technical Accuracy**:
+
    - Correct repository URLs
    - Accurate command names
    - Proper JSON formatting
 
 3. **Markdown Best Practices**:
+
    - Tables for commands
    - Fenced code blocks with language hints
    - Proper escaping in JSON examples
@@ -141,11 +151,13 @@ MIT © Icediver
    - Frosty-fresh tagline
 
 To use this:
+
 1. Copy the entire content
 2. Create new `README.md` in your repo
 3. Paste and commit the changes
 
 Would you like me to:
+
 1. Add a "Troubleshooting" section?
 2. Include a demo animation?
 3. Add more detailed plugin documentation?
