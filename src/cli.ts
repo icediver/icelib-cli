@@ -5,15 +5,26 @@ import figlet from "figlet";
 import { initCommand } from "./commands/init.js";
 import { addCommand } from "./commands/add.js";
 import { allCommand } from "./commands/all.js";
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const pkg = JSON.parse(
+  readFileSync(join(__dirname, "../package.json"), "utf-8"),
+);
 
 const program = new Command();
 
 console.log(
-  chalk.blue(figlet.textSync("IceLib", { horizontalLayout: "full" })),
+  chalk.redBright(figlet.textSync("IceLib", { horizontalLayout: "full" })),
 );
 
 program
-  .version("1.0.0")
+  .name("icelib")
+  .version(pkg.version)
   .description("A CLI for managing UI components like shadcn/ui");
 
 program
