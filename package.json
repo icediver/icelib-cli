@@ -1,6 +1,6 @@
 {
   "name": "icelib",
-  "version": "1.0.40",
+  "version": "1.0.41",
   "type": "module",
   "description": "CLI for managing UI components with smart synchronization",
   "main": "dist/index.js",
