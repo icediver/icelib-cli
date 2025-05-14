@@ -38,6 +38,9 @@ jobs:
           git push origin HEAD:main
           git push --tags
 
+      - name: Сборка проекта
+        run: npm run build
+
       - name: Публикуем в npm
         run: npm publish --access public
         env:

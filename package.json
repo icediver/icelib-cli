@@ -12,8 +12,8 @@
     "url": "https://github.com/icediver/icelib-cli"
   },
   "files": [
-    "dist",
-    "templates"
+    "./dist/**/*",
+    "./templates/**/*"
   ],
   "scripts": {
     "dev": "node scripts/watch.js",
