@@ -4,6 +4,7 @@
   "type": "module",
   "description": "CLI for managing UI components with smart synchronization",
   "main": "dist/index.js",
+  "preferGlobal": true,
   "bin": {
     "icelib": "./dist/cli.js"
   },
